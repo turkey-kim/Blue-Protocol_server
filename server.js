@@ -7,7 +7,10 @@ const jwt = require("jsonwebtoken");
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://blue-protocol-db-test.netlify.app",
+    ],
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
