@@ -1,14 +1,14 @@
-require("dotenv").config();
-const app = require("./server");
-const MongoClient = require("mongodb").MongoClient;
+import dotenv from "dotenv";
+dotenv.config();
+import { MongoClient } from "mongodb";
 const uri = process.env.DB;
 
-const client = new MongoClient(uri, {
+export const client = new MongoClient(uri, {
   //   useNewUrlParser: true,
   //   useUnifiedTopology: true,
 });
 
-async function connectToMongoDB() {
+export async function connectToMongoDB() {
   try {
     await client.connect("BP");
     console.log("Connected to MongoDB Atlas");
@@ -18,8 +18,3 @@ async function connectToMongoDB() {
     throw err;
   }
 }
-
-module.exports = {
-  client,
-  connectToMongoDB,
-};

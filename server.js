@@ -1,9 +1,11 @@
-const express = require("express");
-const { client, connectToMongoDB } = require("./db.js");
-require("dotenv").config();
+import express from "express";
+import { client, connectToMongoDB } from "./db.js";
+import cors from "cors";
+import jwt from "jsonwebtoken";
+import { s3 } from "./aws.js";
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
-const cors = require("cors");
-const jwt = require("jsonwebtoken");
 
 app.use(
   cors({
@@ -32,13 +34,22 @@ async function startServer() {
 startServer();
 
 app.get("/", async (req, res) => {
-  try {
-    const db = client.db("BP");
-    const result = await db.collection("login").findOne({ id: "admin" });
-    console.log(result);
-  } catch (err) {
-    console.log(err);
-  }
+  const bucketName = "blueprotocol-mury";
+  //* 버켓의 객체 리스트 출력
+  let objectlists = [];
+  await s3
+    .listObjectsV2({ Bucket: bucketName })
+    .promise()
+    .then((data) => {
+      console.log("Object Lists : ", data);
+      for (let i of data.Contents) {
+        objectlists.push(i.Key);
+      }
+      console.log("objectlists : ", objectlists);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 });
 
 app.post("/", async (req, res) => {
@@ -51,14 +62,11 @@ app.post("/admin/login", async (req, res) => {
   const db = client.db("BP");
   const result = await db.collection("login").findOne({ id: id });
   if (result && pw === result.pw) {
-    // 비번 검증
     const token = jwt.sign({ id: id }, process.env.JWT_KEY, {
       expiresIn: "1m",
     });
     console.log(token);
     res.json(token);
-    //토큰생성
-    //토큰전달
   } else {
     res.json(false);
   }
