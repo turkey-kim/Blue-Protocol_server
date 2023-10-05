@@ -46,7 +46,11 @@ apiRouter.post('/uploadNews', async (req, res) => {
 
 apiRouter.get('/getNews', async (req, res) => {
   const db = client.db('BP');
-  const allNews = await db.collection('news').find().toArray();
+  const allNews = await db
+    .collection('news')
+    .find()
+    .sort({ date: -1 })
+    .toArray();
   res.json(allNews);
   console.log(allNews);
 });
@@ -56,7 +60,7 @@ apiRouter.get('/getLatestNews', async (req, res) => {
   const news = await db
     .collection('news')
     .find()
-    .sort({ date: 1 })
+    .sort({ date: -1 })
     .limit(3)
     .toArray();
   res.json(news);
