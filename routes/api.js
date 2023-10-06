@@ -76,17 +76,12 @@ apiRouter.get('/getLatestNews', async (req, res) => {
 apiRouter.post('/postLastNewsIndex', async (req, res) => {
   const db = client.db('BP');
   let { index } = req.body;
-  console.log(index);
-  // 인덱스 넘버의 db 포함해서 6개 불러오기
-  // 맨 위 인덱스 빼기
-  // 나머지 5개 res로 전송
-  const sixNews = await db
+  const moreNews = await db
     .collection('news')
-    .find({ id: parseInt(index) })
+    .find({ id: { $lt: index } })
     .sort({ id: -1 })
-    .skip(parseInt(index))
-    .limit(parseInt(index) + 6)
+    .limit(5)
     .toArray();
-  console.log(sixNews);
+  res.json(moreNews);
 });
 export default apiRouter;
