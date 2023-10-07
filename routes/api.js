@@ -51,8 +51,6 @@ apiRouter.post('/uploadNews', async (req, res) => {
   db.collection('counter').updateOne({ name: 'news' }, { $inc: { total: 1 } });
 });
 
-apiRouter.get('/');
-
 apiRouter.get('/getNews', async (req, res) => {
   const db = client.db('BP');
   const allNews = await db
@@ -87,10 +85,4 @@ apiRouter.post('/postLastNewsIndex', async (req, res) => {
   res.json(moreNews);
 });
 
-apiRouter.get('/getAllNewsLength', async (req, res) => {
-  const db = client.db('BP');
-  const array = await db.collection('news').find().toArray();
-  const length = array.length;
-  res.json(length);
-});
 export default apiRouter;
