@@ -84,4 +84,5 @@ apiRouter.post('/postLastNewsIndex', async (req, res) => {
     .toArray();
   res.json(moreNews);
 });
+
 export default apiRouter;
