@@ -85,7 +85,6 @@ apiRouter.post("/postLastNewsIndex", async (req, res) => {
   res.json(moreNews);
 });
 
-<<<<<<< HEAD
 apiRouter.post("/updateNews", async (req, res) => {
   const { title, outline, category, thumbnail, content, id } = req.body;
   const date = new Date();
@@ -126,6 +125,4 @@ apiRouter.post("/deleteNews", async (req, res) => {
     .catch((err) => console.err(err));
 });
 
-=======
->>>>>>> aaa66046ac9af8d5bf0130c1ab1ee9ba4d1c0890
 export default apiRouter;
