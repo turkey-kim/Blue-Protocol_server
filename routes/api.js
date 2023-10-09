@@ -109,8 +109,20 @@ apiRouter.post("/updateNews", async (req, res) => {
       }
     )
     .catch((err) => console.err(err));
+});
 
-  db.collection("counter").updateOne({ name: "news" }, { $inc: { total: 1 } });
+apiRouter.post("/deleteNews", async (req, res) => {
+  const { id } = req.body;
+  const date = new Date();
+
+  const db = client.db("BP");
+
+  await db
+    .collection("news")
+    .deleteOne({
+      id: parseInt(id),
+    })
+    .catch((err) => console.err(err));
 });
 
 export default apiRouter;
