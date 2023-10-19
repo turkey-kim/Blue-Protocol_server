@@ -161,3 +161,20 @@ apiRouter.post('/updateGuideData', async (req, res) => {
     )
     .catch(err => console.err(err));
 });
+
+apiRouter.post('/uploadDatabase', async (req, res) => {
+  const {category, title, content} = req.body;
+
+  const db = client.db('BP');
+
+  await db
+    .collection('database')
+    .insertOne({
+      category,
+      title,
+      content,
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
