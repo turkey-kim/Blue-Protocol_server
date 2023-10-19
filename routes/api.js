@@ -178,3 +178,41 @@ apiRouter.post('/uploadDatabase', async (req, res) => {
       console.error(err);
     });
 });
+
+apiRouter.get('/getDatabase', async (req, res) => {
+  const db = client.db('BP');
+  const getData = await db.collection('database').find().toArray();
+  res.send(getData);
+});
+
+apiRouter.post('/deleteDatabase', async (req, res) => {
+  const db = client.db('BP');
+  const {title} = req.body;
+  await db
+    .collection('database')
+    .deleteOne({
+      title,
+    })
+    .catch(err => console.err(err));
+});
+
+apiRouter.post('/updateDatabase', async (req, res) => {
+  const db = client.db('BP');
+  const {category, title, content} = req.body;
+
+  await db
+    .collection('database')
+    .updateOne(
+      {
+        title: title,
+      },
+      {
+        $set: {
+          category: category,
+          title: title,
+          content: content,
+        },
+      },
+    )
+    .catch(err => console.error(err));
+});
