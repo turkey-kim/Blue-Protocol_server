@@ -4,6 +4,7 @@ import {s3} from '../aws.js';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import dotenv from 'dotenv';
+import {ObjectId} from 'mongodb';
 dotenv.config();
 
 const apiRouter = express.Router();
@@ -40,7 +41,7 @@ apiRouter.post('/uploadNews', async (req, res) => {
       category: category,
       thumbnail: thumbnail,
       content: content,
-      date: date.toLocaleString(),
+      date: date.toLocaleDateString(),
     })
     .catch(err => console.err(err));
 
@@ -90,7 +91,7 @@ apiRouter.post('/updateNews', async (req, res) => {
           category: category,
           thumbnail: thumbnail,
           content: content,
-          date: date.toLocaleString(),
+          date: date.toLocaleDateString(),
         },
       },
     )
@@ -141,7 +142,7 @@ apiRouter.post('/deleteGuideData', async (req, res) => {
 });
 
 apiRouter.post('/updateGuideData', async (req, res) => {
-  const {category, title, content} = req.body;
+  const {category, title, content, _id} = req.body;
 
   const db = client.db('BP');
 
@@ -149,7 +150,7 @@ apiRouter.post('/updateGuideData', async (req, res) => {
     .collection('guide')
     .updateOne(
       {
-        title: title,
+        _id: new ObjectId(_id),
       },
       {
         $set: {
@@ -177,4 +178,42 @@ apiRouter.post('/uploadDatabase', async (req, res) => {
     .catch(err => {
       console.error(err);
     });
+});
+
+apiRouter.get('/getDatabase', async (req, res) => {
+  const db = client.db('BP');
+  const getData = await db.collection('database').find().toArray();
+  res.send(getData);
+});
+
+apiRouter.post('/deleteDatabase', async (req, res) => {
+  const db = client.db('BP');
+  const {title} = req.body;
+  await db
+    .collection('database')
+    .deleteOne({
+      title,
+    })
+    .catch(err => console.err(err));
+});
+
+apiRouter.post('/updateDatabase', async (req, res) => {
+  const db = client.db('BP');
+  const {category, title, content, _id} = req.body;
+
+  await db
+    .collection('database')
+    .updateOne(
+      {
+        _id: new ObjectId(_id),
+      },
+      {
+        $set: {
+          category: category,
+          title: title,
+          content: content,
+        },
+      },
+    )
+    .catch(err => console.error(err));
 });
