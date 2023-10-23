@@ -130,7 +130,12 @@ apiRouter.get('/getGuideData', async (req, res) => {
   const getData = await db.collection('guide').find().toArray();
   res.send(getData);
 });
-export default apiRouter;
+
+apiRouter.get(`/getGuideList`, async (req, res) => {
+  const db = client.db('BP');
+  const getData = await db.collection('guide').find().project({_id: 0, category: 1, title: 1}).toArray();
+  res.send(getData);
+});
 
 apiRouter.post('/deleteGuideData', async (req, res) => {
   const {title} = req.body;
@@ -217,3 +222,5 @@ apiRouter.post('/updateDatabase', async (req, res) => {
     )
     .catch(err => console.error(err));
 });
+
+export default apiRouter;
