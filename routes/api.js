@@ -126,8 +126,9 @@ apiRouter.post('/uploadGuide', async (req, res) => {
 });
 
 apiRouter.get('/getGuideData', async (req, res) => {
+  const {title} = req.query;
   const db = client.db('BP');
-  const getData = await db.collection('guide').find().toArray();
+  const getData = await db.collection('guide').findOne({title: title});
   res.send(getData);
 });
 
