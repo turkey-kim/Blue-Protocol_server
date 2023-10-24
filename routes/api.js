@@ -192,6 +192,22 @@ apiRouter.get('/getDatabase', async (req, res) => {
   res.send(getData);
 });
 
+apiRouter.get('/getDatabaseList', async (req, res) => {
+  const db = client.db('BP');
+  const getData = await db.collection('database').find().project({_id: 0, title: 1, category: 1}).toArray();
+  res.send(getData);
+});
+
+apiRouter.get('/getDatabaseContents', async (req, res) => {
+  const db = client.db('BP');
+  const params = req.query.title;
+  const getData = await db.collection('database').findOne({title: params});
+  if (params === undefined) {
+    const undefinedData = await db.collection('database').find({category: '클래스'}).sort({_id: -1}).limit(1).toArray();
+    res.send(undefinedData[0]);
+  } else res.send(getData);
+});
+
 apiRouter.post('/deleteDatabase', async (req, res) => {
   const db = client.db('BP');
   const {title} = req.body;
