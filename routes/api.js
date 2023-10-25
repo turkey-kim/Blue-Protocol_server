@@ -255,4 +255,19 @@ apiRouter.post('/updateDatabase', async (req, res) => {
     .catch(err => console.error(err));
 });
 
+apiRouter.post('/titleChecker', async (req, res) => {
+  const db = client.db('BP');
+  const {title, collection} = req.body;
+  const isTitleExist = await db
+    .collection(collection)
+    .findOne({title: title})
+    .catch(err => console.error(err));
+
+  if (!isTitleExist) {
+    res.send(false);
+  } else {
+    res.send(true);
+  }
+});
+
 export default apiRouter;
