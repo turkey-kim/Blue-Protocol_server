@@ -264,9 +264,9 @@ apiRouter.post('/titleChecker', async (req, res) => {
     .catch(err => console.error(err));
 
   if (!isTitleExist) {
-    res.send(false);
-  } else {
     res.send(true);
+  } else {
+    res.send(false);
   }
 });
 
