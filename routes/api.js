@@ -194,7 +194,12 @@ apiRouter.get('/getDatabase', async (req, res) => {
 
 apiRouter.get('/getDatabaseList', async (req, res) => {
   const db = client.db('BP');
-  const getData = await db.collection('database').find().project({_id: 0, title: 1, category: 1}).toArray();
+  const getData = await db
+    .collection('database')
+    .find()
+    .project({_id: 0, title: 1, category: 1})
+    .sort({_id: -1})
+    .toArray();
   res.send(getData);
 });
 
