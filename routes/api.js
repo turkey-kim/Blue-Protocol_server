@@ -198,7 +198,7 @@ apiRouter.get('/getDatabaseList', async (req, res) => {
     .collection('database')
     .find()
     .project({_id: 0, title: 1, category: 1})
-    .sort({_id: -1})
+    .sort({title: 1})
     .toArray();
   res.send(getData);
 });
@@ -208,7 +208,13 @@ apiRouter.get('/getDatabaseContents', async (req, res) => {
   const params = req.query.title;
   const getData = await db.collection('database').findOne({title: params});
   if (params === undefined) {
-    const undefinedData = await db.collection('database').find({category: '클래스'}).sort({_id: -1}).limit(1).toArray();
+    const undefinedData = await db
+      .collection('database')
+      .find({category: '클래스'})
+      .sort({title: 1})
+      .limit(1)
+      .toArray();
+    console.log(undefinedData);
     res.send(undefinedData[0]);
   } else res.send(getData);
 });
